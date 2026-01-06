@@ -1,0 +1,171 @@
+/* style.css */
+
+/* 1. VARIABLES & RESET 
+   We define colors here so you can change the whole theme by editing just these lines.
+*/
+:root {
+    --primary-color: #005f73;    /* Industrial Blue (Header/Buttons) */
+    --accent-color: #0a9396;     /* Lighter Blue (Highlights) */
+    --sidebar-bg: #f4f4f4;       /* Light Grey */
+    --text-dark: #333333;
+    --text-light: #ffffff;
+    --border-color: #dddddd;
+}
+
+* {
+    box-sizing: border-box; /* Makes sizing elements much easier */
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #fff;
+    color: var(--text-dark);
+    height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column; /* Stack Header on top of Main Body */
+}
+
+/* 2. HEADER 
+   Stays at the top, holds the logo and progress.
+*/
+.top-bar {
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Pushes Logo left, Progress right */
+    padding: 0 20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+    z-index: 10; /* Ensures shadow sits on top of other elements */
+}
+
+.logo {
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+
+.user-status {
+    font-size: 0.9rem;
+    background: rgba(0,0,0,0.2);
+    padding: 5px 15px;
+    border-radius: 20px;
+}
+
+/* 3. MAIN CONTAINER 
+   This holds the Sidebar and Content side-by-side.
+*/
+.main-container {
+    display: flex; /* This is the magic that creates columns */
+    flex: 1;       /* Take up all remaining height below the header */
+    overflow: hidden; /* Prevents double scrollbars */
+}
+
+/* 4. SIDEBAR NAVIGATION 
+   Fixed width on the left.
+*/
+.sidebar {
+    width: 280px;
+    background-color: var(--sidebar-bg);
+    border-right: 1px solid var(--border-color);
+    overflow-y: auto; /* Scroll if list is too long */
+    padding: 20px 0;
+}
+
+.sidebar h3 {
+    padding: 0 20px 10px 20px;
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    color: #666;
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: 10px;
+}
+
+.module-item {
+    padding: 15px 20px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: background 0.2s;
+    border-left: 4px solid transparent; /* Invisible border for hover effect */
+}
+
+.module-item:hover {
+    background-color: #e9e9e9;
+}
+
+/* The class we add via JavaScript when a lesson is selected */
+.module-item.active {
+    background-color: #e0f7fa;
+    border-left: 4px solid var(--primary-color);
+    font-weight: 600;
+    color: var(--primary-color);
+}
+
+/* 5. CONTENT AREA 
+   The main stage for the video.
+*/
+.content-area {
+    flex: 1; /* Take up all remaining width */
+    padding: 40px;
+    overflow-y: auto; /* Allow scrolling inside the content area */
+    background-color: #fff;
+}
+
+/* Video Responsive Container */
+.video-wrapper {
+    width: 100%;
+    max-width: 900px; /* Stop it from getting too huge on big monitors */
+    aspect-ratio: 16 / 9; /* Modern CSS to keep video shape correct */
+    background-color: #000;
+    margin: 20px 0;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+#lesson-title {
+    margin-bottom: 10px;
+    color: var(--primary-color);
+}
+
+#lesson-desc {
+    color: #555;
+    line-height: 1.6;
+    max-width: 800px;
+}
+
+/* 6. QUIZ SECTION 
+   Hidden by default, styled to look distinct.
+*/
+#quiz-section {
+    max-width: 900px;
+    background: #f9f9f9;
+    padding: 30px;
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    margin-top: 40px;
+}
+
+.hidden {
+    display: none; /* Utility class to hide elements */
+}
+
+/* Buttons */
+.btn-primary {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    margin-top: 20px;
+}
+
+.btn-primary:hover {
+    background-color: var(--accent-color);
+}

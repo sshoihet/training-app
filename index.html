@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Training Portal</title>
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <header class="top-bar">
+        <div class="logo">Company Training</div>
+        <div class="user-status">Progress: <span id="progress-percent">0%</span></div>
+    </header>
+
+    <div class="main-container">
+        
+        <nav class="sidebar">
+            <h3>Course Modules</h3>
+            <ul id="module-list">
+                </ul>
+        </nav>
+
+        <main class="content-area">
+            
+            <section id="video-section">
+                <h1 id="lesson-title">Loading Lesson...</h1>
+                <p id="lesson-desc"></p>
+                
+                <div class="video-wrapper">
+                    <div id="video-player">
+                        </div>
+                </div>
+            </section>
+
+            <section id="quiz-section" class="hidden">
+                <h2>Knowledge Check</h2>
+                <p id="quiz-question"></p>
+                <div id="quiz-options" class="options-grid">
+                    </div>
+                <button id="submit-answer" class="btn-primary">Submit Answer</button>
+            </section>
+
+        </main>
+    </div>
+
+    <script src="courses.js"></script>
+    <script src="app.js"></script>
+
+</body>
+</html>
