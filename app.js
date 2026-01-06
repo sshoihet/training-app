@@ -72,8 +72,15 @@ function loadLesson(index) {
     
     // Video Embed
     videoPlayer.innerHTML = `
-        <iframe src="https://www.youtube.com/embed/${course.videoId}" 
-        title="Training Video" frameborder="0" allowfullscreen></iframe>`;
+        <iframe
+            width ="100%"
+            height="100%"
+            src="https://www.youtube.com/embed/${course.videoId}"
+            title="Training Video"
+            frameborder="0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowfullscreen>
+        </iframe>`;
 
     // Reset Quiz Area
     quizSection.classList.remove('hidden'); // Show quiz area
