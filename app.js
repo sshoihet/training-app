@@ -21,7 +21,8 @@ const progressDisplay = document.getElementById('progress-percent');
 document.addEventListener('DOMContentLoaded', () => {
     updateProgressDisplay();
     renderSidebar();
-    loadYoutubeAPI(); // Manually trigger the API load
+    submitBtn.addEventListener('click', handleSubmit); 
+    loadYoutubeAPI(); 
 });
 
 function loadYoutubeAPI() {
