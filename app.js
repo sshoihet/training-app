@@ -2,66 +2,68 @@
 
 // 1. STATE VARIABLES
 let currentLessonIndex = 0;
-let maxProgress = parseInt(localStorage.getItem('splashPadTrainingProgress')) || 0; // Load saved progress or default to 0
-let currentSelectedAnswer = null; // Tracks which button the user just clicked
+let maxProgress = parseInt(localStorage.getItem('splashPadTrainingProgress')) || 0;
+let currentSelectedAnswer = null;
+let player; 
 
 // 2. DOM ELEMENTS
 const moduleList = document.getElementById('module-list');
 const lessonTitle = document.getElementById('lesson-title');
 const lessonDesc = document.getElementById('lesson-desc');
-const videoPlayer = document.getElementById('video-player');
+const videoPlayerContainer = document.getElementById('video-player');
 const quizSection = document.getElementById('quiz-section');
 const quizQuestion = document.getElementById('quiz-question');
 const quizOptions = document.getElementById('quiz-options');
 const submitBtn = document.getElementById('submit-answer');
 const progressDisplay = document.getElementById('progress-percent');
 
-// 3. INITIALIZATION
+// 3. INITIALIZATION & YOUTUBE LOADING (THE FIX)
 document.addEventListener('DOMContentLoaded', () => {
     updateProgressDisplay();
     renderSidebar();
-    
-    // Load the furthest unlocked lesson, or the first one
-    loadLesson(maxProgress < courseData.length ? maxProgress : 0);
-    
-    // Attach event listener to the Submit button
-    submitBtn.addEventListener('click', handleSubmit);
+    loadYoutubeAPI(); // Manually trigger the API load
 });
 
-// 4. SIDEBAR LOGIC (With Locking)
+function loadYoutubeAPI() {
+    // 1. Define the callback function GLOBALLY so YouTube can find it
+    window.onYouTubeIframeAPIReady = function() {
+        // Once API is ready, load the first lesson
+        loadLesson(maxProgress < courseData.length ? maxProgress : 0);
+    };
+
+    // 2. Inject the script tag
+    const tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    const firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+}
+
+// This function is automatically called by the YouTube API script when it loads
+function onYouTubeIframeAPIReady() {
+    loadLesson(maxProgress < courseData.length ? maxProgress : 0);
+}
+
+// 4. SIDEBAR LOGIC
 function renderSidebar() {
     moduleList.innerHTML = ''; 
-    
     courseData.forEach((course, index) => {
         const li = document.createElement('li');
         li.innerText = course.title;
         li.className = 'module-item';
 
-        // Check if this lesson is completed
-        if (index < maxProgress) {
-            li.classList.add('completed');
-        }
-
-        // Check if this lesson is locked (index is higher than progress)
+        if (index < maxProgress) li.classList.add('completed');
         if (index > maxProgress) {
             li.classList.add('locked');
         } else {
-            // Only add click listener if unlocked
-            li.addEventListener('click', () => {
-                loadLesson(index);
-            });
+            li.addEventListener('click', () => loadLesson(index));
         }
 
-        // Highlight active
-        if (index === currentLessonIndex) {
-            li.classList.add('active');
-        }
-
+        if (index === currentLessonIndex) li.classList.add('active');
         moduleList.appendChild(li);
     });
 }
 
-// 5. LOAD LESSON
+// 5. LOAD LESSON (UPDATED FOR API)
 function loadLesson(index) {
     currentLessonIndex = index;
     const course = courseData[index];
@@ -70,30 +72,51 @@ function loadLesson(index) {
     lessonTitle.innerText = course.title;
     lessonDesc.innerText = course.description;
     
-    // Video Embed
-    videoPlayer.innerHTML = `
-        <iframe
-            width ="100%"
-            height="100%"
-            src="https://www.youtube.com/embed/${course.videoId}"
-            title="Training Video"
-            frameborder="0"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-            allowfullscreen>
-        </iframe>`;
-
-    // Reset Quiz Area
-    quizSection.classList.remove('hidden'); // Show quiz area
-    buildQuiz(course.quiz);
+    // HIDE THE QUIZ INITIALLY
+    quizSection.classList.add('hidden');
     
-    // Re-render sidebar to update the "Active" highlight
+    // CHECK IF ALREADY COMPLETED
+    // If user has already passed this level, show quiz immediately
+    if (index < maxProgress) {
+        quizSection.classList.remove('hidden');
+    }
+
+    // LOAD YOUTUBE PLAYER
+    // If a player already exists, destroy it so we can create a new one
+    if (player) {
+        player.destroy();
+    }
+
+    // Create a fresh div for the player to latch onto
+    videoPlayerContainer.innerHTML = '<div id="yt-player-target"></div>';
+
+    player = new YT.Player('yt-player-target', {
+        height: '100%',
+        width: '100%',
+        videoId: course.videoId,
+        events: {
+            'onStateChange': onPlayerStateChange
+        }
+    });
+
+    // Build the quiz (it stays hidden until video ends)
+    buildQuiz(course.quiz);
     renderSidebar(); 
 }
 
-// 6. QUIZ BUILDER
+// 6. DETECT VIDEO END (NEW)
+function onPlayerStateChange(event) {
+    // YT.PlayerState.ENDED is usually code 0
+    if (event.data === YT.PlayerState.ENDED) {
+        // Video finished! Show the quiz.
+        quizSection.classList.remove('hidden');
+    }
+}
+
+// 7. QUIZ BUILDER
 function buildQuiz(quizData) {
     quizQuestion.innerText = quizData.question;
-    quizOptions.innerHTML = ''; // Clear old buttons
+    quizOptions.innerHTML = ''; 
     currentSelectedAnswer = null;
     submitBtn.innerText = "Submit Answer";
     submitBtn.disabled = false;
@@ -104,11 +127,8 @@ function buildQuiz(quizData) {
         btn.className = 'quiz-btn';
         
         btn.addEventListener('click', () => {
-            // 1. Remove 'selected' from all other buttons
             document.querySelectorAll('.quiz-btn').forEach(b => b.classList.remove('selected'));
-            // 2. Add 'selected' to this one
             btn.classList.add('selected');
-            // 3. Update state
             currentSelectedAnswer = index;
         });
 
@@ -116,7 +136,7 @@ function buildQuiz(quizData) {
     });
 }
 
-// 7. HANDLE SUBMIT
+// 8. HANDLE SUBMIT
 function handleSubmit() {
     if (currentSelectedAnswer === null) {
         alert("Please select an answer first.");
@@ -127,35 +147,93 @@ function handleSubmit() {
     const buttons = document.querySelectorAll('.quiz-btn');
 
     if (currentSelectedAnswer === correctIndex) {
-        // --- CORRECT ANSWER ---
         buttons[currentSelectedAnswer].classList.add('correct');
         submitBtn.innerText = "Correct! Next Lesson ->";
         
-        // Save Progress (Only if we are at the user's current max level)
         if (currentLessonIndex === maxProgress) {
             maxProgress++;
             localStorage.setItem('splashPadTrainingProgress', maxProgress);
             updateProgressDisplay();
         }
 
-        // Wait 1.5 seconds, then load next lesson
         setTimeout(() => {
             if (currentLessonIndex + 1 < courseData.length) {
                 loadLesson(currentLessonIndex + 1);
             } else {
-                alert("Congratulations! You have completed the entire training course.");
-                renderSidebar(); // Refresh checkmarks
+                renderSidebar();
+                showCompletionScreen();
             }
         }, 1500);
 
     } else {
-        // --- WRONG ANSWER ---
         buttons[currentSelectedAnswer].classList.add('wrong');
-        alert("Incorrect. Please watch the video and try again.");
+        alert("Incorrect. Please re-watch the video if needed.");
+        // Optional: Rewind video to start if they get it wrong?
+        // player.seekTo(0); 
     }
 }
 
-// 8. UPDATE PROGRESS BAR TEXT
+// 9. CERTIFICATE GENERATION
+function showCompletionScreen() {
+    document.getElementById('video-section').classList.add('hidden');
+    quizSection.classList.add('hidden');
+    
+    const completionSection = document.getElementById('completion-section');
+    completionSection.classList.remove('hidden');
+    
+    // Remove old listeners to prevent duplicates if function runs twice
+    const btn = document.getElementById('download-cert-btn');
+    const newBtn = btn.cloneNode(true);
+    btn.parentNode.replaceChild(newBtn, btn);
+
+    newBtn.addEventListener('click', () => {
+        const name = document.getElementById('user-name').value;
+        if(name.trim() === "") {
+            alert("Please enter your name for the certificate.");
+            return;
+        }
+        generatePDF(name);
+    });
+}
+
+function generatePDF(studentName) {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'landscape' });
+    
+    doc.setLineWidth(3);
+    doc.setDrawColor(0, 95, 115); 
+    doc.rect(10, 10, 277, 190); 
+    
+    doc.setFontSize(40);
+    doc.setTextColor(0, 95, 115);
+    doc.text("Certificate of Completion", 148.5, 50, null, null, "center");
+    
+    doc.setFontSize(16);
+    doc.setTextColor(100);
+    doc.text("This certifies that", 148.5, 80, null, null, "center");
+    
+    doc.setFontSize(30);
+    doc.setTextColor(0);
+    doc.text(studentName, 148.5, 105, null, null, "center");
+    doc.setLineWidth(1);
+    doc.line(70, 108, 227, 108); 
+    
+    doc.setFontSize(16);
+    doc.setTextColor(100);
+    doc.text("has successfully completed the training course:", 148.5, 130, null, null, "center");
+    
+    doc.setFontSize(22);
+    doc.setTextColor(0, 95, 115);
+    doc.text("Splash Pad Systems & Maintenance", 148.5, 145, null, null, "center");
+    
+    const today = new Date().toLocaleDateString();
+    doc.setFontSize(12);
+    doc.setTextColor(150);
+    doc.text(`Date Issued: ${today}`, 148.5, 180, null, null, "center");
+
+    doc.save("SplashPad-Certificate.pdf");
+}
+
 function updateProgressDisplay() {
     const percent = Math.round((maxProgress / courseData.length) * 100);
     progressDisplay.innerText = percent + "% Complete";
