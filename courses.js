@@ -81,12 +81,13 @@ const courseData = [
             question: "Arrange the Winterization steps in the correct order (Top to Bottom):",
             // LIST THESE IN THE CORRECT ORDER (The code will shuffle them)
             options: [
-                "1. Shut off main water supply",
-                "2. Open all manifold drain valves",
-                "3. Connect compressed air to system",
-                "4. Blow out lines until dry",
-                "5. Install winter caps on features"
+                "Shut off main water supply",
+                "Open all manifold drain valves",
+                "Connect compressed air to system",
+                "Blow out lines until dry",
+                "Install winter caps on features"
             ]
         }
     }
+
 ];
