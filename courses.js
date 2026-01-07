@@ -22,7 +22,8 @@ const courseData = [
         title: "Wiring Diagram: Controller",
         description: "Study the wiring schematic for the main PLC controller. Note the inputs for the activation bollard.",
         mediaType: "image",
-        source: "https://images.unsplash.com/photo-1555662772-882255850908?q=80&w=1000&auto=format&fit=crop", // Placeholder schematic image
+        // Switched to a stable Wikimedia Commons URL
+        source: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Electronic_circuit.jpg/1280px-Electronic_circuit.jpg", 
         quiz: {
             question: "Which input is used for the Activation Bollard?",
             options: [
