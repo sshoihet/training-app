@@ -354,3 +354,45 @@ body {
         max-height: none; /* Let it grow naturally */
     }
 }
+
+/* --- DRAG & DROP STYLES --- */
+.sortable-item {
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 8px;
+    cursor: grab; /* Shows the 'hand' cursor */
+    display: flex;
+    align-items: center;
+    transition: background 0.2s;
+    font-weight: 500;
+    position: relative;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.sortable-item:active {
+    cursor: grabbing;
+    background: #f0faff;
+    border-color: var(--primary-blue);
+}
+
+/* The little 'grip' lines icon on the left */
+.sortable-item::before {
+    content: "☰";
+    color: #bbb;
+    margin-right: 15px;
+    font-size: 1.2rem;
+}
+
+/* Success/Error states for sorting */
+.sortable-list.correct .sortable-item {
+    border-color: #28a745;
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.sortable-list.wrong .sortable-item {
+    border-color: #dc3545;
+    background-color: #f8d7da;
+}

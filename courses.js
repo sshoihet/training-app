@@ -73,18 +73,20 @@ const courseData = [
     {
         id: 5,
         title: "Winterization Procedure",
-        description: "Critical steps to prevent freeze damage during the off-season. Ensure all lines are blown out with compressed air.",
+        description: "Critical steps to prevent freeze damage. Drag the steps into the correct order.",
         mediaType: "video",
         source: "dQw4w9WgXcQ", 
         quiz: {
-            question: "What is the most critical step in winterization?",
+            type: "sort", // NEW: Tells the app this is a sorting question
+            question: "Arrange the Winterization steps in the correct order (Top to Bottom):",
+            // LIST THESE IN THE CORRECT ORDER (The code will shuffle them)
             options: [
-                "Polishing the stainless steel",
-                "Removing all water from lines using compressed air",
-                "Turning off the lights",
-                "Covering the features with tarps"
-            ],
-            correctAnswer: 1
+                "1. Shut off main water supply",
+                "2. Open all manifold drain valves",
+                "3. Connect compressed air to system",
+                "4. Blow out lines until dry",
+                "5. Install winter caps on features"
+            ]
         }
     }
 ];
