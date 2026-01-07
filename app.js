@@ -97,17 +97,29 @@ function loadLesson(index) {
         });
     } 
     else if (course.mediaType === 'image') {
-        // RENDER IMAGE + "READY" BUTTON
+        // RENDER IMAGE + BOTTOM TOOLBAR
         videoPlayerContainer.innerHTML = `
-            <div style="height:100%; display:flex; flex-direction:column;">
-                <img src="${course.source}" style="width:100%; height:auto; max-height:85%; object-fit:contain; background:#f0f0f0;">
-                <div style="text-align:center; padding: 10px; background: #eee;">
-                    <button id="img-done-btn" class="btn-primary" style="width:auto; display:inline-block;">
-                        I have studied this diagram. Start Quiz ->
+            <div style="height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#000;">
+                
+                <div style="flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+                    <img src="${course.source}" style="max-width:100%; max-height:100%; object-fit:contain;">
+                </div>
+
+                <div style="width:100%; padding:15px; background:rgba(255,255,255,0.1); border-top:1px solid #333; text-align:center;">
+                    <span style="color:#ccc; margin-right:15px; font-size:0.9rem;">Reviewing Diagram...</span>
+                    <button id="img-done-btn" class="btn-primary" style="width:auto; display:inline-block; margin:0; padding:8px 20px; font-size:0.9rem;">
+                        I'm Ready for the Quiz
                     </button>
                 </div>
+
             </div>
         `;
+        
+        // Add click listener
+        document.getElementById('img-done-btn').addEventListener('click', () => {
+            quizSection.classList.remove('hidden');
+        });
+    }
         
         // Add click listener to the new button
         document.getElementById('img-done-btn').addEventListener('click', () => {
