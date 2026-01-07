@@ -396,3 +396,58 @@ body {
     border-color: #dc3545;
     background-color: #f8d7da;
 }
+
+/* --- INTERACTIVE MODULES: VALVE SIMULATOR --- */
+.interaction-container {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    height: 400px;
+    background-color: #333;
+    border: 4px solid #555;
+    margin: 0 auto 20px auto;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.valve-handle {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    /* Uses a simple valve icon */
+    background-image: url('https://img.icons8.com/color/96/valve.png'); 
+    background-size: contain;
+    background-repeat: no-repeat;
+    cursor: pointer;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy effect */
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
+    z-index: 10;
+}
+
+/* State: Open (Vertical pipe flow) */
+.valve-handle.open {
+    transform: rotate(0deg); 
+}
+
+/* State: Closed (Cross flow) */
+.valve-handle.closed {
+    transform: rotate(90deg);
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)) grayscale(100%);
+}
+
+.valve-label {
+    position: absolute;
+    background: rgba(255,255,255,0.9);
+    padding: 4px 8px;
+    font-size: 0.75rem;
+    border-radius: 4px;
+    font-weight: bold;
+    color: #333;
+    pointer-events: none;
+    transform: translate(-25%, 100%); /* Center label below valve */
+    white-space: nowrap;
+    z-index: 11;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}

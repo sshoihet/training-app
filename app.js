@@ -1,10 +1,10 @@
-// app.js - Supported Types: Multiple Choice & Drag-Sort
+// app.js - Full Feature Set (Video, Image, Sort, Valves)
 
 // 1. STATE VARIABLES
 let currentLessonIndex = 0;
 let maxProgress = parseInt(localStorage.getItem('splashPadTrainingProgress')) || 0;
-let currentSelectedAnswer = null; // For Multiple Choice
-let sortableInstance = null; // For Drag & Drop
+let currentSelectedAnswer = null;
+let sortableInstance = null;
 let player; 
 
 // 2. DOM ELEMENTS
@@ -49,11 +49,8 @@ function renderSidebar() {
         li.innerText = course.title;
         li.className = 'module-item';
         if (index < maxProgress) li.classList.add('completed');
-        if (index > maxProgress) {
-            li.classList.add('locked');
-        } else {
-            li.addEventListener('click', () => loadLesson(index));
-        }
+        if (index > maxProgress) li.classList.add('locked');
+        else li.addEventListener('click', () => loadLesson(index));
         if (index === currentLessonIndex) li.classList.add('active');
         moduleList.appendChild(li);
     });
@@ -67,43 +64,94 @@ function loadLesson(index) {
     lessonTitle.innerText = course.title;
     lessonDesc.innerText = course.description;
     
+    // Reset UI
     quizSection.classList.add('hidden');
     descContainer.style.display = 'block'; 
-    
     if (player) { try { player.destroy(); } catch(e) {} player = null; }
 
+    // --- MEDIA SWITCHER (The Chain) ---
+    
+    // CASE A: VIDEO
     if (course.mediaType === 'video') {
         videoPlayerContainer.innerHTML = '<div id="yt-player-target"></div>';
         player = new YT.Player('yt-player-target', {
             height: '100%', width: '100%', videoId: course.source,
             events: { 'onStateChange': onPlayerStateChange }
         });
-    } else if (course.mediaType === 'image') {
+    } 
+    // CASE B: IMAGE
+    else if (course.mediaType === 'image') {
         videoPlayerContainer.innerHTML = `
             <div style="height:100%; display:flex; flex-direction:column; justify-content:space-between; background:#000;">
                 <div style="flex:1; display:flex; align-items:center; justify-content:center; overflow:hidden;">
                     <img src="${course.source}" style="max-width:100%; max-height:100%; object-fit:contain;">
                 </div>
                 <div style="width:100%; padding:15px; background:rgba(255,255,255,0.1); border-top:1px solid #333; text-align:center;">
-                    <span style="color:#ccc; margin-right:15px; font-size:0.9rem;">Reviewing Diagram...</span>
                     <button id="img-done-btn" class="btn-primary" style="width:auto; display:inline-block; margin:0; padding:8px 20px; font-size:0.9rem;">I'm Ready for the Quiz</button>
                 </div>
             </div>`;
         document.getElementById('img-done-btn').addEventListener('click', () => quizSection.classList.remove('hidden'));
     }
+    // CASE C: VALVE INTERACTION
+    else if (course.mediaType === 'interaction_valves') {
+        videoPlayerContainer.innerHTML = `
+            <div style="height:100%; display:flex; flex-direction:column; justify-content:center; background:#222;">
+                <div id="valve-container" class="interaction-container" style="background-image: url('${course.source}');">
+                    </div>
+                <div style="text-align:center; color:#ccc; margin-top:10px; font-size:0.9rem;">
+                    Click valves to toggle Open/Closed
+                </div>
+            </div>
+        `;
 
+        const container = document.getElementById('valve-container');
+        
+        course.valves.forEach((valve, i) => {
+            // Create Valve
+            const el = document.createElement('div');
+            el.className = `valve-handle ${valve.start}`;
+            el.style.left = valve.x + '%';
+            el.style.top = valve.y + '%';
+            el.id = `valve-${i}`;
+            el.setAttribute('data-state', valve.start);
+
+            // Click Logic
+            el.addEventListener('click', () => {
+                const currentState = el.getAttribute('data-state');
+                const newState = currentState === 'open' ? 'closed' : 'open';
+                el.classList.remove('open', 'closed');
+                el.classList.add(newState);
+                el.setAttribute('data-state', newState);
+            });
+
+            // Create Label
+            const label = document.createElement('div');
+            label.className = 'valve-label';
+            label.innerText = valve.label;
+            label.style.left = valve.x + '%';
+            label.style.top = valve.y + '%';
+
+            container.appendChild(el);
+            container.appendChild(label);
+        });
+
+        // Show submit button immediately for interactions
+        quizSection.classList.remove('hidden');
+    }
+
+    // Auto-show quiz if already completed
     if (index < maxProgress) quizSection.classList.remove('hidden');
 
-    // BUILD QUIZ BASED ON TYPE
     buildQuiz(course.quiz);
     renderSidebar(); 
 }
 
+// 6. DETECT VIDEO END
 function onPlayerStateChange(event) {
     if (event.data === YT.PlayerState.ENDED) quizSection.classList.remove('hidden');
 }
 
-// 6. QUIZ BUILDER (UPDATED)
+// 7. QUIZ BUILDER
 function buildQuiz(quizData) {
     quizQuestion.innerText = quizData.question;
     quizOptions.innerHTML = ''; 
@@ -111,35 +159,29 @@ function buildQuiz(quizData) {
     submitBtn.innerText = "Submit Answer";
     submitBtn.disabled = false;
     
-    // Reset styling classes
-    quizOptions.className = "options-grid";
+    quizOptions.className = "options-grid"; // Reset class
 
-    // --- CASE A: SORTING QUESTION ---
+    // TYPE: SORTING
     if (quizData.type === 'sort') {
-        quizOptions.className = "sortable-list"; // Change class for styling
-
-        // 1. Create an array of objects with original IDs [0, 1, 2, 3...]
+        quizOptions.className = "sortable-list";
         let items = quizData.options.map((text, index) => ({ id: index, text: text }));
-        
-        // 2. Shuffle them so the user has to fix it
-        items.sort(() => Math.random() - 0.5);
+        items.sort(() => Math.random() - 0.5); // Shuffle
 
-        // 3. Render them
         items.forEach(item => {
             const div = document.createElement('div');
             div.innerText = item.text;
             div.className = 'sortable-item';
-            div.setAttribute('data-id', item.id); // Store original index (0 = correct first item)
+            div.setAttribute('data-id', item.id);
             quizOptions.appendChild(div);
         });
 
-        // 4. Enable Drag & Drop (using SortableJS)
-        sortableInstance = new Sortable(quizOptions, {
-            animation: 150,
-            ghostClass: 'sortable-ghost'
-        });
+        sortableInstance = new Sortable(quizOptions, { animation: 150 });
     } 
-    // --- CASE B: STANDARD MULTIPLE CHOICE ---
+    // TYPE: INTERACTION (Empty quiz area, just the submit button)
+    else if (quizData.type === 'interaction_check') {
+        quizOptions.innerHTML = '<p style="text-align:center; color:#666; font-style:italic;">(Perform the task in the window above)</p>';
+    }
+    // TYPE: MULTIPLE CHOICE
     else {
         quizData.options.forEach((optionText, index) => {
             const btn = document.createElement('button');
@@ -155,50 +197,38 @@ function buildQuiz(quizData) {
     }
 }
 
-// 7. HANDLE SUBMIT (UPDATED)
+// 8. HANDLE SUBMIT
 function handleSubmit() {
     const course = courseData[currentLessonIndex];
     let isCorrect = false;
 
-    // --- LOGIC A: SORTING CHECK ---
+    // LOGIC A: SORTING
     if (course.quiz.type === 'sort') {
-        // Get the current order of IDs in the DOM
         const currentOrder = sortableInstance.toArray(); 
-        // We expect them to be "0", "1", "2", "3", "4" in that order
-        
-        // Check if every item is in its original correct index
         isCorrect = currentOrder.every((val, index) => parseInt(val) === index);
-        
-        if (!isCorrect) {
-            document.querySelector('.sortable-list').classList.add('wrong');
-            setTimeout(() => document.querySelector('.sortable-list').classList.remove('wrong'), 1000);
-            alert("Order is incorrect. Please try again.");
-            return; // Stop here
-        } else {
-             document.querySelector('.sortable-list').classList.add('correct');
-        }
+        if (!isCorrect) alert("Order is incorrect.");
     } 
-    // --- LOGIC B: MULTIPLE CHOICE CHECK ---
+    // LOGIC B: VALVE INTERACTION
+    else if (course.quiz.type === 'interaction_check') {
+        isCorrect = true;
+        course.valves.forEach((valve, i) => {
+            const el = document.getElementById(`valve-${i}`);
+            if (el.getAttribute('data-state') !== valve.correct) isCorrect = false;
+        });
+        if (!isCorrect) alert("Valve configuration incorrect. Check which valves should be Open vs Closed.");
+    }
+    // LOGIC C: MULTIPLE CHOICE
     else {
-        if (currentSelectedAnswer === null) {
-            alert("Please select an answer.");
-            return;
-        }
-        const correctIndex = course.quiz.correctAnswer;
-        const buttons = document.querySelectorAll('.quiz-btn');
-        
-        if (currentSelectedAnswer === correctIndex) {
-            isCorrect = true;
-            buttons[currentSelectedAnswer].classList.add('correct');
-        } else {
-            buttons[currentSelectedAnswer].classList.add('wrong');
-            alert("Incorrect. Try again.");
-            return;
-        }
+        if (currentSelectedAnswer === null) { alert("Select an answer."); return; }
+        if (currentSelectedAnswer === course.quiz.correctAnswer) isCorrect = true;
+        else alert("Incorrect.");
     }
 
-    // --- SUCCESS HANDLER (Shared) ---
+    // SUCCESS
     if (isCorrect) {
+        // Visual Success
+        if (course.quiz.type === 'sort') document.querySelector('.sortable-list').classList.add('correct');
+        
         submitBtn.innerText = "Correct! Next Lesson ->";
         if (currentLessonIndex === maxProgress) {
             maxProgress++;
@@ -216,7 +246,7 @@ function handleSubmit() {
     }
 }
 
-// 8. CERTIFICATE & UTILS (Unchanged)
+// 9. CERTIFICATE (Same as before)
 function showCompletionScreen() {
     document.getElementById('desc-container').style.display = 'none';
     quizSection.classList.add('hidden');
