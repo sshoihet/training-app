@@ -446,7 +446,11 @@ body {
     font-weight: bold;
     color: #333;
     pointer-events: none;
-    transform: translate(-25%, 100%); /* Center label below valve */
+    
+    /* --- UPDATED POSITIONING --- */
+    margin-top: 65px; /* Pushes label down 65px (clearing the 60px valve) */
+    transform: translateX(-20%); /* Centers label horizontally relative to the valve */
+    
     white-space: nowrap;
     z-index: 11;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
