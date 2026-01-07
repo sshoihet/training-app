@@ -5,7 +5,7 @@ const courseData = [
         title: "System Overview & Manifolds",
         description: "An introduction to the splash pad water distribution system. Learn how the manifold divides water into different zones.",
         mediaType: "video",
-        source: "dQw4w9WgXcQ", // YouTube ID (Placeholder)
+        source: "dQw4w9WgXcQ", // YouTube ID
         quiz: {
             question: "What is the primary function of the manifold?",
             options: [
@@ -22,7 +22,6 @@ const courseData = [
         title: "Wiring Diagram: Controller",
         description: "Study the wiring schematic for the main PLC controller. Note the inputs for the activation bollard.",
         mediaType: "image",
-        // Switched to a stable Wikimedia Commons URL
         source: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Electronic_circuit.jpg/1280px-Electronic_circuit.jpg", 
         quiz: {
             question: "Which input is used for the Activation Bollard?",
@@ -40,7 +39,7 @@ const courseData = [
         title: "Water Treatment: UV & Chlorine",
         description: "Understanding the dual-sanitization method. Watch how the UV reactor neutralizes bacteria that chlorine might miss.",
         mediaType: "video",
-        source: "M7lc1UVf-VE", // YouTube ID (Placeholder)
+        source: "M7lc1UVf-VE", 
         quiz: {
             question: "Why is UV used in addition to Chlorine?",
             options: [
@@ -56,8 +55,8 @@ const courseData = [
         id: 4,
         title: "Pump Maintenance Checklist",
         description: "Review the daily and weekly maintenance requirements for the feature pump.",
-        mediaType: "image", // Using an image of a checklist/slide
-        source: "https://images.unsplash.com/photo-1581092921461-eab62e97a783?q=80&w=1000", // Placeholder industrial pump image
+        mediaType: "image",
+        source: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Centrifugal_pump.jpg/1280px-Centrifugal_pump.jpg", // Pump image
         quiz: {
             question: "How often should the pump strainer basket be cleaned?",
             options: [
