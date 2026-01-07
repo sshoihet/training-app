@@ -25,25 +25,45 @@
 
         <main class="content-area">
             
-            <section id="video-section">
+            <div class="lesson-header">
                 <h1 id="lesson-title">Loading Lesson...</h1>
-                <p id="lesson-desc"></p>
+            </div>
+
+            <div class="lesson-grid">
                 
-                <div class="video-wrapper">
-                    <div id="video-player">
-                        </div>
-                </div>
-            </section>
-
-            <section id="quiz-section" class="hidden">
-                <h2>Knowledge Check</h2>
-                <p id="quiz-question"></p>
-                <div id="quiz-options" class="options-grid">
+                <div class="video-column">
+                    <div class="video-wrapper">
+                        <div id="video-player"></div>
                     </div>
-                <button id="submit-answer" class="btn-primary">Submit Answer</button>
-            </section>
+                </div>
 
+                <div class="action-column">
+                    
+                    <div id="desc-container">
+                        <h3>About this Module</h3>
+                        <p id="lesson-desc"></p>
+                    </div>
+
+                    <section id="quiz-section" class="hidden">
+                        <div class="quiz-header">
+                            <h2>Knowledge Check</h2>
+                        </div>
+                        <p id="quiz-question"></p>
+                        <div id="quiz-options" class="options-grid"></div>
+                        <button id="submit-answer" class="btn-primary">Submit Answer</button>
+                    </section>
+
+                    <section id="completion-section" class="hidden">
+                        <h2>🎉 Course Completed!</h2>
+                        <p>You have successfully passed all modules.</p>
+                        <input type="text" id="user-name" placeholder="Enter Full Name">
+                        <button id="download-cert-btn" class="btn-primary">Download Certificate</button>
+                    </section>
+
+                </div>
+            </div>
         </main>
+        
     </div>
 
     <script src="courses.js"></script>

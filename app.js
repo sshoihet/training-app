@@ -176,13 +176,15 @@ function handleSubmit() {
 
 // 9. CERTIFICATE GENERATION
 function showCompletionScreen() {
-    document.getElementById('video-section').classList.add('hidden');
+    // Hide Video, Desc, and Quiz
+    // Note: We don't hide the video column anymore, we just hide the Right Column contents
+    document.getElementById('desc-container').style.display = 'none'; // Hide Description
     quizSection.classList.add('hidden');
     
     const completionSection = document.getElementById('completion-section');
     completionSection.classList.remove('hidden');
     
-    // Remove old listeners to prevent duplicates if function runs twice
+    // ... rest of the button logic ...
     const btn = document.getElementById('download-cert-btn');
     const newBtn = btn.cloneNode(true);
     btn.parentNode.replaceChild(newBtn, btn);
@@ -190,7 +192,7 @@ function showCompletionScreen() {
     newBtn.addEventListener('click', () => {
         const name = document.getElementById('user-name').value;
         if(name.trim() === "") {
-            alert("Please enter your name for the certificate.");
+            alert("Please enter your name.");
             return;
         }
         generatePDF(name);
