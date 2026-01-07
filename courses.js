@@ -22,7 +22,8 @@ const courseData = [
         title: "Wiring Diagram: Controller",
         description: "Study the wiring schematic for the main PLC controller. Note the inputs for the activation bollard.",
         mediaType: "image",
-        source: "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d3/Electronic_circuit.jpg/1280px-Electronic_circuit.jpg", 
+        // USES GENERATED PLACEHOLDER IMAGE (Guaranteed to load)
+        source: "https://placehold.co/800x500/222/fff?text=Wiring+Schematic+Placeholder", 
         quiz: {
             question: "Which input is used for the Activation Bollard?",
             options: [
@@ -56,7 +57,8 @@ const courseData = [
         title: "Pump Maintenance Checklist",
         description: "Review the daily and weekly maintenance requirements for the feature pump.",
         mediaType: "image",
-        source: "https://upload.wikimedia.org/wikipedia/commons/thumb/8/8b/Centrifugal_pump.jpg/1280px-Centrifugal_pump.jpg", // Pump image
+        // USES GENERATED PLACEHOLDER IMAGE
+        source: "https://placehold.co/800x500/004e64/fff?text=Pump+Maintenance+Checklist", 
         quiz: {
             question: "How often should the pump strainer basket be cleaned?",
             options: [
