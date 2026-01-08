@@ -79,9 +79,9 @@ const courseData = [
             { id: "v1", label: "Main Supply (V1)", size: "large", x: 17, y: 46, start: "open", correct: "closed" },
             
             // V2 & V3 are DRAINS -> Size: 'small'
-            { id: "v2", label: "Zone 1 Drain (V2)", size: "small", x: 0, y: 0
+            { id: "v2", label: "Zone 1 Drain (V2)", size: "small", x: 41.3, y: 36.1
              , start: "closed", correct: "open" },
-            { id: "v3", label: "Zone 2 Drain (V3)", size: "small", x: 50, y: 35, start: "closed", correct: "open" }
+            { id: "v3", label: "Zone 2 Drain (V3)", size: "small", x: 50, y: 36.1, start: "closed", correct: "open" }
         ],
         quiz: {
             type: "interaction_check", 
@@ -92,6 +92,7 @@ const courseData = [
     }
 
 ];
+
 
 
 
