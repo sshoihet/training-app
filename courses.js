@@ -71,18 +71,20 @@ const courseData = [
     {
         id: 6,
         title: "Simulation: Valve Setup",
-        description: "INTERACTIVE: Configure the manifold for WINTER mode. Close the Main Supply (V1) and Open the Drains (V2 & V3).",
+        description: "Configure the manifold for WINTER mode. Close Main Supply (Large) and Open Drains (Small).",
         mediaType: "interaction_valves", 
-        // Using a pipe background placeholder
-        source: "https://placehold.co/800x600/666/fff?text=Pipe+Manifold+Background", 
+        source: "images/manifold-background.jpg", // Update this to your real background file
         valves: [
-            { id: "v1", label: "Main Supply (V1)", x: 20, y: 40, start: "open", correct: "closed" },
-            { id: "v2", label: "Zone 1 Drain (V2)", x: 50, y: 40, start: "closed", correct: "open" },
-            { id: "v3", label: "Zone 2 Drain (V3)", x: 80, y: 40, start: "closed", correct: "open" }
+            // V1 is the MAIN SUPPLY -> Size: 'large'
+            { id: "v1", label: "Main Supply (V1)", size: "large", x: 20, y: 40, start: "open", correct: "closed" },
+            
+            // V2 & V3 are DRAINS -> Size: 'small'
+            { id: "v2", label: "Zone 1 Drain (V2)", size: "small", x: 50, y: 40, start: "closed", correct: "open" },
+            { id: "v3", label: "Zone 2 Drain (V3)", size: "small", x: 80, y: 40, start: "closed", correct: "open" }
         ],
         quiz: {
             type: "interaction_check", 
-            question: "Click the valves to rotate them, then click Submit.",
+            question: "Set the valves to the correct winter configuration.",
             options: [], 
             correctAnswer: 0
         }

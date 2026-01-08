@@ -397,61 +397,61 @@ body {
     background-color: #f8d7da;
 }
 
-/* --- INTERACTIVE MODULES: VALVE SIMULATOR --- */
-.interaction-container {
-    position: relative;
-    width: 100%;
-    max-width: 600px;
-    height: 400px;
-    background-color: #333;
-    border: 4px solid #555;
-    margin: 0 auto 20px auto;
-    background-size: cover;
-    background-position: center;
-    border-radius: 8px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-}
+/* --- INTERACTIVE MODULES: VARIABLE VALVE SIZES --- */
 
+/* 1. SHARED BASE STYLES (Applies to ALL valves) */
 .valve-handle {
     position: absolute;
-    width: 60px;
-    height: 60px;
-    /* Uses a simple valve icon */
-    background-image: url('https://img.icons8.com/color/96/valve.png'); 
     background-size: contain;
     background-repeat: no-repeat;
+    background-position: center;
     cursor: pointer;
-    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55); /* Bouncy effect */
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5));
     z-index: 10;
+    
+    /* Rotation Logic */
+    transform-origin: center center;
+    transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.5));
 }
 
-/* State: Open (Vertical pipe flow) */
-.valve-handle.open {
-    transform: rotate(0deg); 
+/* 2. SPECIFIC SIZES (Images & Dimensions) */
+
+/* Large Handle (Main Supply) */
+.valve-handle-large {
+    width: 80px;   /* Bigger width */
+    height: 110px; /* Bigger height */
+    background-image: url('images/valve-handle-large.png'); 
 }
 
-/* State: Closed (Cross flow) */
-.valve-handle.closed {
-    transform: rotate(90deg);
-    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.5)) grayscale(100%);
+/* Small Handle (Drains) */
+.valve-handle-small {
+    width: 50px;   /* Smaller width */
+    height: 70px;  /* Smaller height */
+    background-image: url('images/valve-handle-small.png'); 
 }
 
+/* 3. STATES (Rotation) */
+.valve-handle.open { transform: translate(-50%, -50%) rotate(0deg); }
+.valve-handle.closed { transform: translate(-50%, -50%) rotate(90deg); }
+
+/* 4. LABELS (Dynamic Spacing) */
 .valve-label {
     position: absolute;
     background: rgba(255,255,255,0.9);
-    padding: 4px 8px;
+    padding: 3px 6px;
     font-size: 0.75rem;
     border-radius: 4px;
     font-weight: bold;
     color: #333;
     pointer-events: none;
-    
-    /* --- UPDATED POSITIONING --- */
-    margin-top: 65px; /* Pushes label down 65px (clearing the 60px valve) */
-    transform: translateX(-20%); /* Centers label horizontally relative to the valve */
-    
+    transform: translateX(-20%);
     white-space: nowrap;
     z-index: 11;
     box-shadow: 0 2px 4px rgba(0,0,0,0.2);
 }
+
+/* Push label further down for large valves so it doesn't overlap */
+.label-offset-large { margin-top: 80px; }
+
+/* Keep label closer for small valves */
+.label-offset-small { margin-top: 55px; }

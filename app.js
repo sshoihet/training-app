@@ -106,16 +106,20 @@ function loadLesson(index) {
 
         const container = document.getElementById('valve-container');
         
+        // valve rendering loop ...
         course.valves.forEach((valve, i) => {
-            // Create Valve
+            // 1. Create Valve Element
             const el = document.createElement('div');
-            el.className = `valve-handle ${valve.start}`;
+            
+            // ADD CLASS BASED ON SIZE: 'valve-handle-large' or 'valve-handle-small'
+            el.className = `valve-handle valve-handle-${valve.size} ${valve.start}`;
+            
             el.style.left = valve.x + '%';
             el.style.top = valve.y + '%';
             el.id = `valve-${i}`;
             el.setAttribute('data-state', valve.start);
 
-            // Click Logic
+            // Click Logic (Unchanged)
             el.addEventListener('click', () => {
                 const currentState = el.getAttribute('data-state');
                 const newState = currentState === 'open' ? 'closed' : 'open';
@@ -124,9 +128,12 @@ function loadLesson(index) {
                 el.setAttribute('data-state', newState);
             });
 
-            // Create Label
+            // 2. Create Label Element
             const label = document.createElement('div');
-            label.className = 'valve-label';
+            
+            // ADD OFFSET CLASS BASED ON SIZE: 'label-offset-large' or 'label-offset-small'
+            label.className = `valve-label label-offset-${valve.size}`;
+            
             label.innerText = valve.label;
             label.style.left = valve.x + '%';
             label.style.top = valve.y + '%';
