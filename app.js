@@ -92,48 +92,50 @@ function loadLesson(index) {
             </div>`;
         document.getElementById('img-done-btn').addEventListener('click', () => quizSection.classList.remove('hidden'));
     }
-    // CASE C: VALVE INTERACTION
+    // C) RENDER VALVE INTERACTION
     else if (course.mediaType === 'interaction_valves') {
+        
+        // 1. Create the Layout
         videoPlayerContainer.innerHTML = `
-            <div style="height:100%; display:flex; flex-direction:column; justify-content:center; background:#222;">
+            <div style="height:100%; width:100%; display:flex; align-items:center; justify-content:center; background:#222; padding: 20px;">
+                
                 <div id="valve-container" class="interaction-container" style="background-image: url('${course.source}');">
+                    
+                    <div class="instruction-bar">
+                        <span style="color: #4db8ff; font-weight:bold;">TASK:</span> 
+                        Click valves to toggle Open/Closed. Click Submit when ready.
                     </div>
-                <div style="text-align:center; color:#ccc; margin-top:10px; font-size:0.9rem;">
-                    Click valves to toggle Open/Closed
+
                 </div>
             </div>
         `;
 
         const container = document.getElementById('valve-container');
         
-        // valve rendering loop ...
+        // 2. Render Valves (Loop)
         course.valves.forEach((valve, i) => {
-            // 1. Create Valve Element
+            // Create Valve Element
             const el = document.createElement('div');
-            
-            // ADD CLASS BASED ON SIZE: 'valve-handle-large' or 'valve-handle-small'
+            // Add size class
             el.className = `valve-handle valve-handle-${valve.size} ${valve.start}`;
-            
             el.style.left = valve.x + '%';
             el.style.top = valve.y + '%';
             el.id = `valve-${i}`;
             el.setAttribute('data-state', valve.start);
 
-            // Click Logic (Unchanged)
+            // Click Logic
             el.addEventListener('click', () => {
                 const currentState = el.getAttribute('data-state');
                 const newState = currentState === 'open' ? 'closed' : 'open';
+                
                 el.classList.remove('open', 'closed');
                 el.classList.add(newState);
                 el.setAttribute('data-state', newState);
             });
 
-            // 2. Create Label Element
+            // Create Label Element
             const label = document.createElement('div');
-            
-            // ADD OFFSET CLASS BASED ON SIZE: 'label-offset-large' or 'label-offset-small'
             label.className = `valve-label label-offset-${valve.size}`;
-            
             label.innerText = valve.label;
             label.style.left = valve.x + '%';
             label.style.top = valve.y + '%';
@@ -142,7 +144,7 @@ function loadLesson(index) {
             container.appendChild(label);
         });
 
-        // Show submit button immediately for interactions
+        // Show submit button
         quizSection.classList.remove('hidden');
     }
 
