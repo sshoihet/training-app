@@ -397,49 +397,39 @@ body {
     background-color: #f8d7da;
 }
 
-/* --- INTERACTIVE MODULES: VARIABLE VALVE SIZES --- */
-
 /* --- INTERACTIVE MODULES: VALVE SIMULATOR --- */
 
+
+
+/* 1. The Container (The "Box") */
 .interaction-container {
-    position: relative;
+    position: relative; /* CRITICAL: Holds the bar inside */
     width: 100%;
-    /* Ensure height fits within the video player area */
-    height: 100%; 
-    max-height: 500px; /* Optional cap */
-    
-    background-color: #333; /* Fallback color */
+    height: 450px;
+    background-color: #333; 
     background-size: cover;
     background-position: center;
-    background-repeat: no-repeat;
-    
     border: 4px solid #444;
     border-radius: 8px;
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
-    
-    /* Center this container */
     margin: 0 auto;
-    overflow: hidden; /* Keeps the instruction bar inside the rounded corners */
+    overflow: hidden; 
 }
 
-/* NEW: The Instruction Bar at the bottom */
+/* 2. The Instruction Bar (Pinned to Bottom) */
 .instruction-bar {
-    position: absolute;
-    bottom: 0;
+    position: absolute; /* Pins it */
+    bottom: 0;          /* To the bottom */
     left: 0;
     width: 100%;
-    background: rgba(0, 0, 0, 0.7); /* Dark semi-transparent background */
+    background: rgba(0, 0, 0, 0.8);
     color: #fff;
-    padding: 10px;
+    padding: 12px;
     text-align: center;
-    font-size: 0.9rem;
-    border-top: 1px solid #555;
-    z-index: 20; /* Ensure it sits on top of valves if they overlap */
+    border-top: 1px solid #666;
+    z-index: 100;
 }
 
-/* ... Keep your .valve-handle and .valve-label styles below ... */
-
-/* 1. SHARED BASE STYLES (Applies to ALL valves) */
+/* 3. Base Valve Style */
 .valve-handle {
     position: absolute;
     background-size: contain;
@@ -447,51 +437,43 @@ body {
     background-position: center;
     cursor: pointer;
     z-index: 10;
-    
-    /* Rotation Logic */
     transform-origin: center center;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.5));
 }
 
-/* 2. SPECIFIC SIZES (Images & Dimensions) */
-
-/* Large Handle (Main Supply) */
+/* 4. Sizes */
 .valve-handle-large {
-    width: 80px;   /* Bigger width */
-    height: 110px; /* Bigger height */
+    width: 80px;
+    height: 110px;
     background-image: url('images/valve-handle-large.png'); 
 }
 
-/* Small Handle (Drains) */
 .valve-handle-small {
-    width: 50px;   /* Smaller width */
-    height: 70px;  /* Smaller height */
+    width: 50px;
+    height: 70px;
     background-image: url('images/valve-handle-small.png'); 
 }
 
-/* 3. STATES (Rotation) */
+/* 5. States */
 .valve-handle.open { transform: translate(-50%, -50%) rotate(0deg); }
 .valve-handle.closed { transform: translate(-50%, -50%) rotate(90deg); }
 
-/* 4. LABELS (Dynamic Spacing) */
+/* 6. Labels */
 .valve-label {
     position: absolute;
-    background: rgba(255,255,255,0.9);
-    padding: 3px 6px;
+    background: rgba(255,255,255,0.95);
+    padding: 3px 8px;
     font-size: 0.75rem;
     border-radius: 4px;
     font-weight: bold;
     color: #333;
     pointer-events: none;
-    transform: translateX(-20%);
+    transform: translateX(-50%); /* Centers label relative to coordinate */
     white-space: nowrap;
     z-index: 11;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.25);
 }
 
-/* Push label further down for large valves so it doesn't overlap */
-.label-offset-large { margin-top: 80px; }
-
-/* Keep label closer for small valves */
-.label-offset-small { margin-top: 55px; }
+.label-offset-large { margin-top: 60px; }
+.label-offset-small { margin-top: 40px; }
