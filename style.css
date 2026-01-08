@@ -440,6 +440,7 @@ body {
     transform-origin: center center;
     transition: transform 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
     filter: drop-shadow(3px 3px 5px rgba(0,0,0,0.5));
+    border: 1px, dashed yellow;
 }
 
 /* 4. Sizes */
@@ -478,3 +479,4 @@ body {
 .label-offset-large { margin-top: 60px; }
 
 .label-offset-small { margin-top: 40px; }
+
