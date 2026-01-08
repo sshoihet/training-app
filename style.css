@@ -457,7 +457,7 @@ body {
 
 /* 5. States */
 .valve-handle.open { transform: translate(-50%, -50%) rotate(0deg); }
-.valve-handle.closed { transform: translate(-50%, -50%) rotate(90deg); }
+.valve-handle.closed { transform: translate(-50%, -50%) rotate(-90deg); }
 
 /* 6. Labels */
 .valve-label {
@@ -476,4 +476,5 @@ body {
 }
 
 .label-offset-large { margin-top: 60px; }
+
 .label-offset-small { margin-top: 40px; }
