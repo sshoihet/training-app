@@ -81,7 +81,7 @@ const courseData = [
             // V2 & V3 are DRAINS -> Size: 'small'
             { id: "v2", label: "Zone 1 Drain (V2)", size: "small", x: 41.3, y: 30
              , start: "closed", correct: "open" },
-            { id: "v3", label: "Zone 2 Drain (V3)", size: "small", x: 48, y: 30, start: "closed", correct: "open" }
+            { id: "v3", label: "Zone 2 Drain (V3)", size: "small", x: 49.7, y: 30, start: "closed", correct: "open" }
         ],
         quiz: {
             type: "interaction_check", 
@@ -92,6 +92,7 @@ const courseData = [
     }
 
 ];
+
 
 
 
